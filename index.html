@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator with Logo</title>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #qr-text, #logo-input {
+      margin-bottom: 10px;
+    }
+
+    #qr-code {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Generator with Logo</h1>
+    <input type="text" id="qr-text" placeholder="Enter text or URL">
+    <input type="file" id="logo-input" accept="image/*">
+    <button onclick="generateQR()">Generate QR Code</button>
+    <div id="qr-code"></div>
+    <br><br><br>
+    <p></p>
+    
+
+				If you want to make a QR Code of the following:
+				<br><p></p>
+				1) For normal QR Code | Just enter the url in the textbox and press the Generate QR Code <br><br>
+				2) For a normal QR Code with a centered logo image --> follow the steps for 1) and then click the browse button to add your logo photo <br><br>
+				3) sending a text message to a phone number, use  smsto:#########  <br><br>
+				4) sending an email to a certain address, use  mailto:email_address <br><br>
+				5) call a specific number from a QR Code, use TEL:#########  <br><br>
+				6) scan and go directly to a search of a keyword, use www.google.com/search?q=knightdale  replace knightdale with your keyword <br><br>
+                		7) If your search has multiple keywords, place + between them
+</div>
+	
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <script>
+    function generateQR() {
+      var text = document.getElementById('qr-text').value;
+      var logoInput = document.getElementById('logo-input');
+      
+      if (text === '') {
+        alert('Please enter text or URL.');
+        return;
+      }
+
+      var qr = new QRious({
+        value: text,
+        size: 300
+      });
+
+      if (logoInput.files && logoInput.files[0]) {
+        var logo = logoInput.files[0];
+        var qrCanvas = qr.canvas;
+        var context = qrCanvas.getContext('2d');
+
+        var logoImg = new Image();
+        logoImg.src = URL.createObjectURL(logo);
+
+        logoImg.onload = function() {
+          var logoSize = qr.size / 4;
+          var x = (qrCanvas.width - logoSize) / 2;
+          var y = (qrCanvas.height - logoSize) / 2;
+
+          context.drawImage(logoImg, x, y, logoSize, logoSize);
+
+          var qrCodeContainer = document.getElementById('qr-code');
+          qrCodeContainer.innerHTML = '';
+          qrCodeContainer.appendChild(qrCanvas);
+        };
+      } else {
+        var qrCodeContainer = document.getElementById('qr-code');
+        qrCodeContainer.innerHTML = '';
+        qrCodeContainer.appendChild(qr.canvas);
+      }
+    }
+  </script>
+
+
+
+
+</body>
+</html>
